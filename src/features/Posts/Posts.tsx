@@ -39,11 +39,6 @@ export const Posts: FC<Props> = ({navigation}) => {
       );
 
       if (res?.data) {
-        // console.log(
-        //   'response got for page no #',
-        //   res.data.near_earth_objects[0].id,
-        //   res.data.near_earth_objects.length,
-        // );
         setPosts(res.data.near_earth_objects);
         setStatus(Status.resolved);
       }

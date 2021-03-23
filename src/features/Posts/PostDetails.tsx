@@ -1,10 +1,17 @@
 import React, {FC} from 'react';
-import {StyleSheet, ScrollView} from 'react-native';
-import {Container, Header, Left, Text, Button, Title, Body} from 'native-base';
+import {StyleSheet, Linking} from 'react-native';
+import {
+  Container,
+  Header,
+  Left,
+  Text,
+  Button,
+  Title,
+  Body,
+  Content,
+} from 'native-base';
 import axios from 'axios';
 
-// @ts-ignore
-import JSONTree from 'react-native-json-tree';
 type Props = {
   navigation: any;
   route: any;
@@ -23,7 +30,7 @@ export const PostDetails: FC<Props> = ({navigation, route}) => {
   const [status, setStatus] = React.useState(Status.idle);
 
   const nasaApiKey = 'hLRfeCa4PCLoFSWyMsGh49F2IREUdpUl0zbnhz6w';
-  const [data, setData] = React.useState();
+  const [data, setData] = React.useState<any>();
 
   const apiCall = async () => {
     console.log('api called for page no #');
@@ -38,7 +45,7 @@ export const PostDetails: FC<Props> = ({navigation, route}) => {
         setStatus(Status.resolved);
       }
     } catch (error) {
-      // console.log('err', error);
+      console.log('err', error);
       setStatus(Status.rejected);
     }
   };
@@ -61,12 +68,30 @@ export const PostDetails: FC<Props> = ({navigation, route}) => {
           <Title>Asteroid Details</Title>
         </Body>
       </Header>
+
       {Status.resolved === status ? (
-        <ScrollView>
-          <JSONTree data={data} />
-        </ScrollView>
+        <Content style={{padding: 7}}>
+          <Text>
+            <Text style={{fontWeight: '700'}}>ID - </Text>
+            {data?.id}
+          </Text>
+          <Text>
+            <Text style={{fontWeight: '700'}}>Name - </Text>
+            {data?.name}
+          </Text>
+          <Text
+            style={{color: '#039af4'}}
+            onPress={() => Linking.openURL(data?.nasa_jpl_url)}>
+            <Text style={{fontWeight: '700'}}>Url - </Text>
+            {data?.nasa_jpl_url}
+          </Text>
+        </Content>
       ) : (
-        <Text style={{padding: 10}}>Finding Asteroid Details...</Text>
+        <Text style={{padding: 10}}>
+          {Status.rejected === status
+            ? `No Asteroid found with this id --> ${id}`
+            : 'Finding Asteroid Details...'}
+        </Text>
       )}
     </Container>
   );
